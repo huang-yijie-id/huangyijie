@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>住宅运营组 - 组织架构与工作全景</title>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            color: #2C3E50;
+            overflow-x: hidden;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            padding: 6rem 0 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #E67E22 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .cards-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(44, 62, 80, 0.2);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #E67E22 0%, #F39C12 100%);
+        }
+        
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(230, 126, 34, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+        
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(230, 126, 34, 0.3);
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 1rem;
+        }
+        
+        .card-description {
+            color: #34495E;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .card-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+        
+        .card-features li {
+            color: #34495E;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .card-features li::before {
+            content: '✓';
+            color: #E67E22;
+            font-weight: bold;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(230, 126, 34, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(230, 126, 34, 0.4);
+        }
+        
+        .info-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.1);
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .info-section h2 {
+            font-size: 2.5rem;
+            color: #2C3E50;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .info-section p {
+            color: #34495E;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #E67E22;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .stat-label {
+            color: #34495E;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .cards-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            .feature-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">住宅运营组</h1>
+            <p class="hero-subtitle">组织架构图与工作全景图</p>
+            <p class="hero-description">
+                基于现代企业管理理念，构建清晰的组织架构与职责分工体系，
+                实现住宅运营业务的高效协同与精细化管理。
+            </p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="cards-section">
+            <a href="org-chart.html" class="feature-card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h2 class="card-title">组织架构图</h2>
+                    <p class="card-description">
+                        清晰展现住宅运营组的层级结构与汇报关系，
+                        体现现代企业的科学管理体系。
+                    </p>
+                    <ul class="card-features">
+                        <li>交互式组织树状图</li>
+                        <li>岗位职责详细展示</li>
+                        <li>层级关系一目了然</li>
+                        <li>支持悬停查看详情</li>
+                    </ul>
+                    <div class="cta-button">
+                        查看组织架构图
+                        <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                    </div>
+                </div>
+            </a>
+
+            <a href="work-overview.html" class="feature-card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <h2 class="card-title">工作全景图</h2>
+                    <p class="card-description">
+                        全面展示各岗位的核心职责与工作事项，
+                        实现职责分工的可视化管理。
+                    </p>
+                    <ul class="card-features">
+                        <li>岗位职责全景展示</li>
+                        <li>工作任务详细分解</li>
+                        <li>专业分工清晰明确</li>
+                        <li>支持交互式浏览</li>
+                    </ul>
+                    <div class="cta-button">
+                        查看工作全景图
+                        <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="info-section">
+            <h2>关于住宅运营组</h2>
+            <p>
+                住宅运营组作为公司核心业务部门，承担着住宅项目的全周期运营管理职责。
+                通过科学的组织架构设计与精细化的职责分工，确保各项业务目标的有效达成。
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">专业岗位</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">职能组别</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">管理体系</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">目标达成</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 入场动画
+        anime({
+            targets: '.hero-content > *',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 800,
+            easing: 'easeOutQuart',
+            delay: anime.stagger(200, {start: 300})
+        });
+
+        anime({
+            targets: '.feature-card',
+            opacity: [0, 1],
+            translateY: [50, 0],
+            duration: 1000,
+            easing: 'easeOutQuart',
+            delay: anime.stagger(200, {start: 800})
+        });
+
+        anime({
+            targets: '.info-section',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 800,
+            easing: 'easeOutQuart',
+            delay: 1200
+        });
+
+        anime({
+            targets: '.stat-item',
+            opacity: [0, 1],
+            scale: [0.8, 1],
+            duration: 600,
+            easing: 'easeOutQuart',
+            delay: anime.stagger(100, {start: 1400})
+        });
+
+        // 卡片悬停效果
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                anime({
+                    targets: this.querySelector('.card-icon'),
+                    rotateY: 360,
+                    duration: 600,
+                    easing: 'easeOutQuart'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

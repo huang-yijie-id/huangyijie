@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作全景图 - 住宅运营组</title>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            color: #2C3E50;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(44, 62, 80, 0.15);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .role-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.1);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        /* 组长卡片样式 */
+        .leader-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #2C3E50;
+        }
+        
+        .leader-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2C3E50 0%, #34495E 100%);
+        }
+        
+        .leader-card .role-icon {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+        }
+        
+        .leader-card .role-description {
+            border-left: 3px solid #2C3E50;
+        }
+        
+        /* 其他成员卡片样式 */
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #E67E22 0%, #F39C12 100%);
+        }
+        
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(44, 62, 80, 0.15);
+        }
+        
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .role-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+        }
+        
+        .role-title {
+            flex: 1;
+        }
+        
+        .role-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .role-position {
+            font-size: 0.9rem;
+            color: #34495E;
+            font-weight: 500;
+        }
+        
+        .role-description {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #E67E22;
+        }
+        
+        .role-description p {
+            color: #2C3E50;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .tasks-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .tasks-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tasks-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .task-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #34495E;
+            line-height: 1.5;
+            transition: all 0.2s ease;
+        }
+        
+        .task-item:hover {
+            border-color: #E67E22;
+            background: #fff9f5;
+        }
+        
+        .task-item::before {
+            content: '▸';
+            color: #E67E22;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .group-section {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .group-section h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .group-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-buttons {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 4px 16px rgba(230, 126, 34, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            .overview-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .role-card {
+                padding: 1.5rem;
+            }
+            
+            .nav-buttons {
+                bottom: 1rem;
+                right: 1rem;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>工作全景图</h1>
+        <p>住宅运营组 - 岗位职责全景展示</p>
+    </header>
+
+    <div class="container">
+        <div class="group-section">
+            <h2>住宅运营组</h2>
+            <p>负责住宅项目收费、经营、数据、运营等年度目标与策略规划</p>
+        </div>
+
+        <div class="overview-grid">
+            <!-- 组长 -->
+            <div class="role-card leader-card" data-role="leader">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">赖寒</div>
+                        <div class="role-position">组长</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责住宅运营组经营管理、数据信息、项目运营与计划管理四大职能模块的战略规划、业务统筹与团队管理</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">制定并推动住宅项目收费、经营、数据、运营等年度目标与策略规划</li>
+                        <li class="task-item">统筹审批收费制度、经营分析、数据治理、项目评估等关键机制建设</li>
+                        <li class="task-item">决策预缴专项、亏损治理、数据看板、续签策略等重大业务方案</li>
+                        <li class="task-item">牵头跨部门协同，推动业务闭环与系统落地</li>
+                        <li class="task-item">组织部门绩效管理与运营复盘，推动流程优化与能力提升</li>
+                        <li class="task-item">指导各方向重点工作，确保业务数据准确、风险可控、运营稳健</li>
+                        <li class="task-item">代表住宅运营组向公司层面汇报整体运营情况与决策建议</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 项目运营岗 -->
+            <div class="role-card" data-role="project">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">徐凯</div>
+                        <div class="role-position">项目运营岗</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责住宅项目全周期运营评估、续签风险管控、合同评审与印章管理</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">负责项目承接、合同、退出评审预审与台账管理</li>
+                        <li class="task-item">组织项目进场后评估与退出评估会议</li>
+                        <li class="task-item">达成续签率目标，更新续签风险管理办法</li>
+                        <li class="task-item">开展合同盘点与履约风险梳理</li>
+                        <li class="task-item">管理项目用印流程与制度维护</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 收费运营岗 -->
+            <div class="role-card" data-role="fee">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">刘静</div>
+                        <div class="role-position">收费运营岗</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责分散业主收费全流程运营，包括指标管理、制度建设、过程管控与数字化联动</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">制定并优化物业费收费管理办法、奖惩方案与操作指引</li>
+                        <li class="task-item">分解收费指标，组织月度例会，发布收费数据通报</li>
+                        <li class="task-item">开展收费过程抽检、激励核算与优秀案例赋能</li>
+                        <li class="task-item">牵头年度预缴及托收专项方案设计与落地</li>
+                        <li class="task-item">联动数字化组推动收费看板与管家APP功能优化</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 财务运营岗 -->
+            <div class="role-card" data-role="finance">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">邓少敏</div>
+                        <div class="role-position">财务运营岗</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责住宅经营成果数据输出、经营分析体系搭建、公共收益管理与回款运营，支持业务决策与目标达成</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">建立经营分析模型，滚动预测业绩达成，年度经营预算编制等</li>
+                        <li class="task-item">监控重点项目，建立跟踪清单并推动改善</li>
+                        <li class="task-item">负责关联方与第三方应收账款运营，降低应收风险</li>
+                        <li class="task-item">发布《住宅项目社区公共收益管理办法》，管理运营风险</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 计划运营岗 -->
+            <div class="role-card" data-role="planning">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">黄怿杰</div>
+                        <div class="role-position">计划运营岗(PMO)</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责部门PMO机制搭建、绩效管理、报告统筹与流程优化，提升组织运营效率</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">建立健全部门绩效监控与考评机制</li>
+                        <li class="task-item">搭建标准化会议管理、报告体系与经验沉淀机制</li>
+                        <li class="task-item">设计项目综合运营评价模型并推动应用</li>
+                        <li class="task-item">统筹运营月报、司务会报告等专项报告</li>
+                        <li class="task-item">识别并优化内部协作流程，为一线减负</li>
+                        <li class="task-item">推进运营月报、季报体系搭建与住宅运营看板建设</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 基础数据管理岗 -->
+            <div class="role-card" data-role="data-basic">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">闭海军</div>
+                        <div class="role-position">基础数据管理岗</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责主数据、合同数据、物理量数据等基础数据的全周期管理</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">审核项目信息、楼栋、房屋、车场、饱和收入等基础数据</li>
+                        <li class="task-item">管理CMS合同履约系统，开展合同数据治理</li>
+                        <li class="task-item">统筹项目拆分/合并工作，制定操作指引与运行机制</li>
+                        <li class="task-item">主责或协助房屋、合同、物理量等专项数据治理</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 数据运营岗 -->
+            <div class="role-card" data-role="data-operation">
+                <div class="role-header">
+                    <div class="role-icon">
+                        <i class="fas fa-analytics"></i>
+                    </div>
+                    <div class="role-title">
+                        <div class="role-name">杨真</div>
+                        <div class="role-position">数据运营岗</div>
+                    </div>
+                </div>
+                <div class="role-description">
+                    <p>负责住宅数据资产体系建设，包括基础数据管理、车位数据治理、运营月报数据与信息看板建设</p>
+                </div>
+                <div class="tasks-section">
+                    <div class="tasks-title">
+                        <i class="fas fa-tasks"></i>
+                        核心工作职责
+                    </div>
+                    <ul class="tasks-list">
+                        <li class="task-item">管理SIP系统规模数据，输出各类规模报表</li>
+                        <li class="task-item">拉通投业数据，跟进项目转化</li>
+                        <li class="task-item">统筹车位数据治理，制定车位管理规范</li>
+                        <li class="task-item">推进项目信息看板建设与数据治理</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn">返回主页</a>
+        <a href="org-chart.html" class="nav-btn">组织架构图</a>
+    </div>
+
+    <script>
+        // 入场动画
+        anime({
+            targets: '.group-section',
+            opacity: [0, 1],
+            translateY: [-30, 0],
+            duration: 800,
+            easing: 'easeOutQuart',
+            delay: 100
+        });
+
+        anime({
+            targets: '.role-card',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 600,
+            easing: 'easeOutQuart',
+            delay: anime.stagger(100, {start: 300})
+        });
+
+        // 卡片悬停效果
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                anime({
+                    targets: this,
+                    scale: 1.02,
+                    duration: 300,
+                    easing: 'easeOutQuart'
+                });
+            });
+
+            card.addEventListener('mouseleave', function() {
+                anime({
+                    targets: this,
+                    scale: 1,
+                    duration: 300,
+                    easing: 'easeOutQuart'
+                });
+            });
+        });
+
+        // 任务项点击效果
+        document.querySelectorAll('.task-item').forEach(item => {
+            item.addEventListener('click', function() {
+                anime({
+                    targets: this,
+                    backgroundColor: '#fff5ee',
+                    duration: 200,
+                    direction: 'alternate',
+                    easing: 'easeInOutQuad'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

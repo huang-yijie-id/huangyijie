@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组织架构图 - 住宅运营组</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            color: #2C3E50;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(44, 62, 80, 0.15);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #E67E22 0%, #F39C12 100%);
+        }
+        
+        #orgChart {
+            width: 100%;
+            height: 800px;
+        }
+        
+        .info-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-left: 4px solid #E67E22;
+        }
+        
+        .info-panel h3 {
+            color: #2C3E50;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .info-panel p {
+            color: #34495E;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #34495E;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        
+        .nav-buttons {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 4px 16px rgba(230, 126, 34, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            #orgChart {
+                height: 600px;
+            }
+            
+            .nav-buttons {
+                bottom: 1rem;
+                right: 1rem;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>组织架构图</h1>
+        <p>住宅运营组 - 人员职责分工</p>
+    </header>
+
+    <div class="container">
+        <div class="chart-container">
+            <div id="orgChart"></div>
+        </div>
+
+        <div class="info-panel">
+            <h3>组织架构说明</h3>
+            <p>住宅运营组采用分层管理模式，由组长赖寒统一领导，下设四个专业职能组：</p>
+            <p><strong>项目运营组</strong>：负责项目全周期运营评估与风险管理</p>
+            <p><strong>经营管理组</strong>：包含收费运营和财务运营两个岗位，负责经营目标达成</p>
+            <p><strong>计划运营组</strong>：负责部门PMO机制搭建与绩效管理</p>
+            <p><strong>数据信息组</strong>：负责基础数据管理与数据资产体系建设</p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2C3E50;"></div>
+                <span>管理岗位</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #E67E22;"></div>
+                <span>专业岗位</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #34495E;"></div>
+                <span>支持岗位</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn">返回主页</a>
+        <a href="work-overview.html" class="nav-btn">工作全景图</a>
+    </div>
+
+    <script>
+        // 组织架构数据
+        const orgData = {
+            name: "赖寒",
+            position: "组长",
+            description: "负责住宅运营组经营管理、数据信息、项目运营与计划管理四大职能模块的战略规划、业务统筹与团队管理",
+            itemStyle: {
+                color: '#2C3E50',
+                borderColor: '#E67E22',
+                borderWidth: 3
+            },
+            children: [
+                {
+                    name: "徐凯",
+                    position: "项目运营岗",
+                    group: "项目运营组",
+                    description: "负责住宅项目全周期运营评估、续签风险管控、合同评审与印章管理",
+                    itemStyle: {
+                        color: '#E67E22'
+                    }
+                },
+                {
+                    name: "经营管理组",
+                    position: "职能组",
+                    itemStyle: {
+                        color: '#34495E'
+                    },
+                    children: [
+                        {
+                            name: "刘静",
+                            position: "收费运营岗",
+                            description: "负责分散业主收费全流程运营，提升收缴效率与控制应收账款风险",
+                            itemStyle: {
+                                color: '#E67E22'
+                            }
+                        },
+                        {
+                            name: "邓少敏",
+                            position: "财务运营岗",
+                            description: "负责住宅经营成果数据输出、经营分析体系搭建、公共收益管理与回款运营",
+                            itemStyle: {
+                                color: '#E67E22'
+                            }
+                        }
+                    ]
+                },
+                {
+                    name: "黄怿杰",
+                    position: "计划运营岗(PMO)",
+                    group: "计划运营组",
+                    description: "负责部门PMO机制搭建、绩效管理、报告统筹与流程优化",
+                    itemStyle: {
+                        color: '#E67E22'
+                    }
+                },
+                {
+                    name: "数据信息组",
+                    position: "职能组",
+                    itemStyle: {
+                        color: '#34495E'
+                    },
+                    children: [
+                        {
+                            name: "闭海军",
+                            position: "基础数据管理岗",
+                            description: "负责主数据、合同数据、物理量数据等基础数据的全周期管理",
+                            itemStyle: {
+                                color: '#E67E22'
+                            }
+                        },
+                        {
+                            name: "杨真",
+                            position: "数据运营岗",
+                            description: "负责住宅数据资产体系建设，包括基础数据管理、车位数据治理等",
+                            itemStyle: {
+                                color: '#E67E22'
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // 初始化图表
+        const chart = echarts.init(document.getElementById('orgChart'));
+
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                borderColor: '#E67E22',
+                borderWidth: 1,
+                textStyle: {
+                    color: '#2C3E50',
+                    fontSize: 14
+                },
+                formatter: function(params) {
+                    const data = params.data;
+                    if (data.description) {
+                        return `<div style="padding: 10px;">
+                            <strong style="color: #E67E22; font-size: 16px;">${data.name}</strong><br/>
+                            <span style="color: #34495E; font-size: 14px;">${data.position || ''}</span><br/>
+                            <div style="margin-top: 8px; color: #2C3E50; font-size: 13px; line-height: 1.4;">
+                                ${data.description}
+                            </div>
+                        </div>`;
+                    }
+                    return data.name;
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [orgData],
+                    top: '5%',
+                    left: '7%',
+                    bottom: '5%',
+                    right: '20%',
+                    symbolSize: 12,
+                    label: {
+                        position: 'top',
+                        verticalAlign: 'middle',
+                        align: 'center',
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: '#2C3E50',
+                        fontFamily: 'Noto Sans SC',
+                        distance: 15,
+                        formatter: function(params) {
+                            const data = params.data;
+                            if (data.position && data.position !== '职能组') {
+                                return data.name + '\n' + data.position;
+                            }
+                            return data.name;
+                        }
+                    },
+                    leaves: {
+                        label: {
+                            position: 'bottom',
+                            verticalAlign: 'middle',
+                            align: 'center'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: true,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750,
+                    lineStyle: {
+                        color: '#34495E',
+                        width: 2,
+                        curveness: 0.3
+                    },
+                    itemStyle: {
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        shadowBlur: 10,
+                        shadowOffsetY: 5
+                    }
+                }
+            ]
+        };
+
+        chart.setOption(option);
+
+        // 响应式调整
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+
+        // 入场动画
+        anime({
+            targets: '.chart-container',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 800,
+            easing: 'easeOutQuart',
+            delay: 200
+        });
+
+        anime({
+            targets: '.info-panel',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 800,
+            easing: 'easeOutQuart',
+            delay: 400
+        });
+    </script>
+</body>
+</html>
